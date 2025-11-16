@@ -39,4 +39,160 @@ BG_WHITE="\e[107m"
 #Reset Color
 ENDCOLOR="\e[0m"
 
+#Deklarasi Array
+namaArray=()
+nilaiAkhirArray=()
+indeksArray=()
 
+#Deklarasi Variabel yang akan digunakan
+namaMahasiswa=""
+nilaiAbsen=0
+nilaiTugas=0
+nilaiUts=0
+nilaiUas=0
+nilaiAkhir=0
+indeks="E"
+
+#Fungsi untuk menentukan indeks berdasarkan nilai akhir (Notes for me : ternyata bash ga support float)
+hitungNilaiAkhir() {
+    nilaiAkhir=$((nilaiAbsen*10/100 + nilaiTugas*20/100 + nilaiUts*30/100 + nilaiUas*40/100 ))
+    if [ "$nilaiAkhir" -ge 80 ]; then
+        indeks="A"
+    elif [ "$nilaiAkhir" -ge 70 ]; then
+        indeks="B"
+    elif [ "$nilaiAkhir" -ge 60 ]; then
+        indeks="C"
+    elif [ "$nilaiAkhir" -ge 50 ]; then
+        indeks="D"
+    else
+        indeks="E"
+    fi
+}
+
+#Fungsi untuk menambahkan data ke array
+addtoArray(){
+    namaArray+=("$namaMahasiswa")
+    nilaiAkhirArray+=("$nilaiAkhir")
+    indeksArray+=("$indeks")
+}
+
+#Fungsi untuk input data mahasiswa
+inputData(){
+    echo -e "${BG_CYAN}${WHITE} Input Data Mahasiswa ${ENDCOLOR}"
+    #Input Data Mahasiswa
+    read -p "Masukkan Nama Mahasiswa: " namaMahasiswa
+    #Validasi input namaMahasiswa tidak boleh kosong
+    if [ -z "$namaMahasiswa" ]; then
+        echo -e "${RED}Nama Mahasiswa tidak boleh kosong. Silakan coba lagi.${ENDCOLOR}"
+        inputData
+        return
+    fi
+
+    #Input Nilai Mahasiswa
+    read -p "Masukkan Nilai Absen (0-100): " nilaiAbsen
+    #Validasi input nilaiAbsen harus antara 0-100
+    if [ $nilaiAbsen -lt 0 ] || [ $nilaiAbsen -gt 100 ] || [ -z "$nilaiAbsen" ]; then
+        echo -e "${RED}Nilai Absen harus antara 0 hingga 100. Silakan coba lagi.${ENDCOLOR}"
+        inputData
+        return
+    fi
+    
+    #Input Nilai Tugas
+    read -p "Masukkan Nilai Tugas (0-100): " nilaiTugas
+    #Validasi input nilaiTugas harus antara 0-100
+    if [ $nilaiTugas -lt 0 ] || [ $nilaiTugas -gt 100 ] || [ -z "$nilaiTugas" ]; then
+        echo -e "${RED}Nilai Tugas harus antara 0 hingga 100. Silakan coba lagi.${ENDCOLOR}"
+        inputData
+        return
+    fi
+
+    #Input Nilai UTS
+    read -p "Masukkan Nilai UTS (0-100): " nilaiUts
+    #Validasi input nilaiUts harus antara 0-100
+    if [ $nilaiUts -lt 0 ] || [ $nilaiUts -gt 100 ] || [ -z "$nilaiUts" ]; then
+        echo -e "${RED}Nilai UTS harus antara 0 hingga 100. Silakan coba lagi.${ENDCOLOR}"
+        inputData
+        return
+    fi
+
+    #Input Nilai UAS
+    read -p "Masukkan Nilai UAS (0-100): " nilaiUas
+    #Validasi input nilaiUas harus antara 0-100
+    if [ $nilaiUas -lt 0 ] || [ $nilaiUas -gt 100 ] || [ -z "$nilaiUas" ]; then
+        echo -e "${RED}Nilai UAS harus antara 0 hingga 100. Silakan coba lagi.${ENDCOLOR}"
+        inputData
+        return
+    fi
+}
+
+#Fungsi untuk menampilkan data mahasiswa
+showData() {
+    echo -e "${BG_BLUE}${WHITE} Data Mahasiswa ${ENDCOLOR}"
+    echo ""
+
+    #Menampilkan data dari array + validasi jika array kosong
+    if [ ${#namaArray[@]} -ne 0 ]; then
+        for i in "${!namaArray[@]}"; do
+        echo -e "${YELLOW}Nama Mahasiswa:${ENDCOLOR} ${namaArray[$i]}"
+        echo -e "${YELLOW}Nilai Akhir:${ENDCOLOR} ${nilaiAkhirArray[$i]}"
+        echo -e "${YELLOW}Indeks:${ENDCOLOR} ${indeksArray[$i]}"
+        echo -e "${CYAN}------------------------------${ENDCOLOR}"
+    done
+    else
+        echo -e "${YELLOW}Belum ada data mahasiswa yang diinputkan.${ENDCOLOR}"
+    fi
+}
+
+#Fungsi untuk memulai proses input data
+inputProcess(){
+    inputData
+    echo ""
+    echo ""
+    echo -e "${BG_GREEN}${WHITE} Data berhasil diinputkan! ${ENDCOLOR}"
+    hitungNilaiAkhir
+    addtoArray
+    echo ""
+    echo ""
+    showData
+}
+
+#Fungsi  utama
+main() {
+    #Sengaja dibikin true biar selalu loop
+    while true; do
+        echo ""
+        echo ""
+        echo -e "${BG_MAGENTA}${WHITE} MENU UTAMA ${ENDCOLOR}"
+        echo "1. Input Data Mahasiswa"
+        echo "2. Tampilkan Data Mahasiswa"
+        echo "3. Keluar"
+        read -p "Masukkan pilihan Anda (1-3): " pilihan
+
+        #Pilihan Menu
+        case $pilihan in
+            1)  
+                echo ""
+                echo ""
+                inputProcess
+                ;;
+            2)  
+                echo ""
+                echo ""
+                showData
+                ;;
+            3)
+                echo ""
+                echo ""
+                echo -e "${RED}Keluar dari program.${ENDCOLOR}"
+                echo ""
+                echo ""
+                exit 0
+                ;;
+            *)
+                echo -e "${RED}Pilihan tidak valid. Silakan coba lagi.${ENDCOLOR}"
+                ;;
+        esac
+    done
+}
+
+main
