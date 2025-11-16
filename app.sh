@@ -168,7 +168,7 @@ main() {
         echo "3. Keluar"
         read -p "Masukkan pilihan Anda (1-3): " pilihan
 
-        #Pilihan Menu
+        #Menangani pilihan Menu
         case $pilihan in
             1)  
                 echo ""
@@ -189,6 +189,7 @@ main() {
                 exit 0
                 ;;
             *)
+                #validasi pilihan tidak valid
                 echo -e "${RED}Pilihan tidak valid. Silakan coba lagi.${ENDCOLOR}"
                 ;;
         esac
