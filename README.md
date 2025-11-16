@@ -2,6 +2,10 @@
 
 Aplikasi command-line interface berbasis Bash untuk mengelola data nilai mahasiswa. Aplikasi ini menghitung nilai akhir berdasarkan bobot komponen penilaian dan menentukan indeks huruf secara otomatis.
 
+## Video
+
+Link youtube video : https://youtu.be/_lj4XRLRkQE
+
 ## Deskripsi Project
 
 Aplikasi ini dirancang untuk membantu pengelolaan data nilai mahasiswa dengan fitur:
